@@ -57,10 +57,6 @@ class News extends CI_Controller {
             $this->news_model->set_news();
             $this->load->view('news/success');
         }
-    }
-    
-    public function test(){
-        $this->news_model->testNess();
-    }
+    }    
 
 }

@@ -16,7 +16,7 @@ class Game extends CI_Controller {
         
         parent::__construct();
         $this->load->model('game_model');
-        $this->load->model("news_model");
+        $this->load->model("players_model");
         $this->load->helper('url_helper');
         
     }
@@ -76,13 +76,16 @@ class Game extends CI_Controller {
         } else {
             
             $this->load->helper('url');
-            $insert_id = $this->game_model->set_game();         
+            $res = $this->game_model->set_game();         
             
-            $this->news_model->testNess();
-            
-            //NEEDS TO LOAD GAME MODEL AND PLAYERS MODEL 
-            if (!is_null($insert_id)) redirect(base_url().'game/view/'.$insert_id);
-            else $this->load->view('news/success', $data);
+            //Save players in players table 
+            if (!is_null($res['id'])){
+                
+                if ($this->players_model->set_players($res['id'], $res['player_one_nick'], $res['player_two_nick'])){
+                    redirect(base_url().'game/view/'.$res['id']);
+                }
+                                
+            } else $this->load->view('news/success', $data);
             
         }
     }

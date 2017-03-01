@@ -43,7 +43,7 @@ class Game_model extends CI_Model {
         
         $res = $this->db->insert('game', $data);
         
-        if ($res) return $this->db->insert_id();
+        if ($res) return array('id'=>$this->db->insert_id(), 'player_one_nick' => $this->input->post('player_one'), 'player_two_nick' => $this->input->post('player_two'));
         else throw new Exception("Error: DB Insert failed!"); //show_error("Error: Insert db failed!");       
                 
     }
