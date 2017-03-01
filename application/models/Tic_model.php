@@ -1,6 +1,6 @@
 <?php
 
-class News_model extends CI_Model {
+class Tic_model extends CI_Model {
 
     public function __construct() {
         $this->load->database();
@@ -25,18 +25,6 @@ class News_model extends CI_Model {
             'title' => $this->input->post('title'),
             'slug' => $slug,
             'text' => $this->input->post('text')
-        );
-
-        return $this->db->insert('news', $data);
-    }
-    
-    public function testNess(){
-        
-        
-        $data = array(
-            'title' => 'test',
-            'slug' => 'test',
-            'text' => 'test'
         );
 
         return $this->db->insert('news', $data);

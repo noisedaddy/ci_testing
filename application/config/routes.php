@@ -62,8 +62,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 //$route['(:any)'] = 'pages/view/$1';
 //$route['default_controller'] = 'pages/view';
 
-$route['news/create'] = 'news/create';
-$route['news/(:any)'] = 'news/view/$1';
-$route['news'] = 'news';
-$route['(:any)'] = 'pages/view/$1';
-$route['default_controller'] = 'pages/view';
+//$route['news/create'] = 'news/create';
+//$route['news/(:any)'] = 'news/view/$1';
+//$route['news'] = 'news';
+//$route['(:any)'] = 'pages/view/$1';
+//$route['default_controller'] = 'pages/view';
+
+$route['game/create'] = 'game/create';
+$route['game/(:any)'] = 'game/view/$1';
+$route['game'] = 'game';
+$route['(:any)'] = 'game/view/$1';
+$route['default_controller'] = 'game/view';

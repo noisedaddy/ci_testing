@@ -1,6 +1,6 @@
 <?php
 
-class News extends CI_Controller {
+class Tic extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
@@ -54,13 +54,9 @@ class News extends CI_Controller {
         }
         else
         {
-            $this->news_model->set_news();
+            $this->news_model->set_news();            
             $this->load->view('news/success');
         }
-    }
-    
-    public function test(){
-        $this->news_model->testNess();
     }
 
 }

@@ -1,7 +1,9 @@
 <html>
         <head>
-                <title>CodeIgniter Tutorial</title>
+                <title>Tic Tac Toe</title>
+                <link rel="stylesheet" href="<?php echo base_url("assets/css/bootstrap.min.css"); ?>" />
+                <link rel="stylesheet" href="<?php echo base_url("assets/css/style.css"); ?>" />
         </head>
         <body>
-
-                <h1><?php echo $title; ?></h1>
+            <div class="container">
+                <div class="row">                
