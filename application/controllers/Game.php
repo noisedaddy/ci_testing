@@ -16,7 +16,8 @@ class Game extends CI_Controller {
         
         parent::__construct();
         $this->load->model('game_model');
-        $this->load->model("players_model");
+        $this->load->model('players_model');
+        $this->load->model('position_model');
         $this->load->helper('url_helper');
         
     }
@@ -42,7 +43,8 @@ class Game extends CI_Controller {
                     show_404();
             }
 
-            $data['title'] = $data['game_item']['player_one_nick']." Vs ".$data['game_item']['player_two_nick'];
+            $data['title'] = '<div><div>'.$data['game_item']['player_one_nick'].'</div>'." Vs ".$data['game_item']['player_two_nick'];
+            
             $data['status'] = $data['game_item']['status'];
             $data['id'] = ($id);
             $data['width'] = self::WIDTH;
@@ -96,13 +98,37 @@ class Game extends CI_Controller {
      */
     public function makeMove($id = NULL){
         
-        //$arr = array('a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5);    
-
-         header('Content-Type: application/json');
-         echo json_encode( $id );
+        $this->load->helper('url');
+        
+        $x = $this->input->post('x');
+        $y = $this->input->post('y');
+        $playerID = 1;
+        
+        
+        $current = $this->currentPlayer;
+        $this->field[$x][$y] = $current;
+        $this->currentPlayer = ($current == 1) ? 2 : 1;
+        $this->step++;
+        
+        
+        $res = $this->position_model->set_position($id, $playerID, $x, $y); 
+        
+        if ($res){
+            $win = $this->checkWin($id, $playerID, $x, $y);
+        } else {
+            
+        }
+        
+        header('Content-Type: application/json');
+        echo json_encode( $win );
     }
     
+    public function checkWin($id = null, $playerID = null, $x = null, $y = null){
+        return $this->position_model->checkWinModel($id, $playerID, $x, $y);
+    }
     
-    
+    public function getCurrentPlayer() {
+        return $this->currentPlayer;
+    }
 
 }
