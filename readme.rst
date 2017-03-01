@@ -72,3 +72,5 @@ contributors to the CodeIgniter project and you, the CodeIgniter user.
 
 1 .Set up default route to route to game/create
 2. On player crete form add POST variables to stay on page after submit
+3. Look up to joins 
+4. 

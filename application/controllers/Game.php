@@ -1,6 +1,5 @@
 <?php
 
-//include_once (dirname(__FILE__) . "/News.php");
 
 class Game extends CI_Controller {
 
@@ -17,6 +16,7 @@ class Game extends CI_Controller {
         
         parent::__construct();
         $this->load->model('game_model');
+        $this->load->model("news_model");
         $this->load->helper('url_helper');
         
     }
@@ -78,7 +78,7 @@ class Game extends CI_Controller {
             $this->load->helper('url');
             $insert_id = $this->game_model->set_game();         
             
-            //redirect('/News/test');
+            $this->news_model->testNess();
             
             //NEEDS TO LOAD GAME MODEL AND PLAYERS MODEL 
             if (!is_null($insert_id)) redirect(base_url().'game/view/'.$insert_id);
