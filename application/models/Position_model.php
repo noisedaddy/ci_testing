@@ -31,6 +31,22 @@ class Position_model extends CI_Model {
     
     public function checkWinModel($gameID = null, $player = null, $x = null, $y = null){
         //query goes here
+        $sql = "
+            SELECT
+            SUM(IF(pos_x = '".$x."', 1, 0)) AS count_x,
+            SUM(IF(pos_y = '".$y."', 1, 0)) AS count_y
+            FROM position where fk_player_id = ".$player." and fk_game_id = ".$gameID."
+         ";
+        $query = $this->db->query($sql)->row_array();
+        
+        if ($query['count_x'] == 3 || $query['count_y'] == 3){
+            return true;
+        }
+        
+//        if ( ! $this->db->simple_query('SELECT `example_field` FROM `example_table`'))
+//        {
+//                $error = $this->db->error(); // Has keys 'code' and 'message'
+//        }
     }
 
 }

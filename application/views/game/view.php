@@ -1,6 +1,11 @@
 <h3><?php echo $title; ?></h3>
 <h3><?php echo $status; ?></h3>
-<?php echo validation_errors(); ?>
+<div class="pl_check">
+ 	<?php if ($currentPlayer) : ?>
+    <p class="js-step">Player <span class="icon player<?php echo $currentPlayer ?>" id="pl_step_"<?php echo $playerID; ?>><?php echo $playerNick ?> - </span></p>
+	<?php endif ?>   
+</div>
+                
 <?php echo form_open('game/makeMove/'.$id, array('name'=> 'frm_table')); ?>
 	<div class="ticTacField">
 		<?php for ($y = 1; $y < $height; $y++) : ?>

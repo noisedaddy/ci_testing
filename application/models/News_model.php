@@ -31,12 +31,12 @@ class News_model extends CI_Model {
     }
     
     public function testNess(){
-        
+
         
         $data = array(
-            'title' => 'test',
-            'slug' => 'test',
-            'text' => 'test'
+            'title' => $this->input->post('title'),
+            'slug' => $slug,
+            'text' => $this->input->post('text')
         );
 
         return $this->db->insert('news', $data);

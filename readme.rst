@@ -70,7 +70,9 @@ The CodeIgniter team would like to thank EllisLab, all the
 contributors to the CodeIgniter project and you, the CodeIgniter user.
 
 
-1 .Set up default route to route to game/create
-2. On player crete form add POST variables to stay on page after submit
+1 .Set up default route to route from \ to game/create
+2. On player create form add POST variables to stay on page after submit AND validation rules for same fields in create form
 3. Look up to joins 
-4. 
+4. set_players multiple insert 
+5. Find player ID in view and pass to controller !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+6. Make SQL for winner(COUNT AND ALL...)
