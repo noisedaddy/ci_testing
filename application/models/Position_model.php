@@ -29,8 +29,16 @@ class Position_model extends CI_Model {
         else throw new Exception("Error: DB Insert failed!"); //show_error("Error: Insert db failed!"); 
     }
     
+    /**
+     * Check if current player won the game
+     * @param type $gameID
+     * @param type $player
+     * @param type $x
+     * @param type $y
+     * @return type
+     */
     public function checkWinModel($gameID = null, $player = null, $x = null, $y = null){
-        //query goes here
+        
         $sql = "
             SELECT
             SUM(IF(pos_x = '".$x."', 1, 0)) AS count_x,
@@ -40,13 +48,11 @@ class Position_model extends CI_Model {
         $query = $this->db->query($sql)->row_array();
         
         if ($query['count_x'] == 3 || $query['count_y'] == 3){
-            return true;
+            return array('result' => true, 'playerSymbol' => $player, 'gameID' => $gameID);
+        } else {
+            return array('result' => false);
         }
         
-//        if ( ! $this->db->simple_query('SELECT `example_field` FROM `example_table`'))
-//        {
-//                $error = $this->db->error(); // Has keys 'code' and 'message'
-//        }
     }
 
 }

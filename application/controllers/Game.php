@@ -112,7 +112,21 @@ class Game extends CI_Controller {
         /**
          * Sets current players position
          */
-        $res = $this->position_model->set_position($id, $current, $x, $y); 
+        $position = $this->position_model->set_position($id, $current, $x, $y); 
+        
+        if ($position) {
+            
+            /**
+             * Check if player won the game
+             */
+            $win = $this->position_model->checkWinModel($id, $current, $x, $y);
+            
+            if ($win['result']){
+                $winner = $this->players_model->get_player_by_symbol($id, $current);
+                return array('winner' => $winner['player_nick'], 'playerSymbol' => $winner['player_symbol'], 'gameID' => $winner['fk_game_id']);
+            }
+            
+        } 
         
         /**
          * Change players
@@ -124,7 +138,7 @@ class Game extends CI_Controller {
         /**
          * Find opponent
          */
-        $opponent = $this->players_model->get_player_by_symbol($id, $this->currentPlayer);
+        $next = $this->players_model->get_player_by_symbol($id, $this->currentPlayer);
         
  
                                           
@@ -134,7 +148,7 @@ class Game extends CI_Controller {
 //            
 //        }
         
-        $response = array('winner' => $this->getWinner(), 'winnerCells' => $this->getWinnerCells(), 'playerSymbol' => $this->getCurrentPlayer(), 'playerID' => $opponent['id'], 'playerName'=>$opponent['player_nick']);
+        $response = array('winner' => $this->getWinner(), 'winnerCells' => $this->getWinnerCells(), 'playerSymbol' => $this->getCurrentPlayer(), 'playerID' => $next['id'], 'playerName'=>$next['player_nick']);
 
         header('Content-Type: application/json');
         echo json_encode( $response );
