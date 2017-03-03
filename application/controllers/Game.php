@@ -9,7 +9,7 @@ class Game extends CI_Controller {
     const COUNT_WIN = 3;
     private $field = [];
     private $winnerCells = [];
-    private $currentPlayer = 1;
+    private $currentPlayer;
 //    private $currentPlayer = null;
     private $winner = null;
     private $step = 0;
@@ -107,28 +107,43 @@ class Game extends CI_Controller {
         
         $x = $this->input->post('x');
         $y = $this->input->post('y');               
-        //$this->currentPlayer = ($this->currentPlayer == null) ? $this->input->post('currentPlayer') : $this->currentPlayer;
-                        
-        /**
+//        $this->currentPlayer = ($this->currentPlayer == null) ? $this->input->post('currentPlayer') : $this->currentPlayer;
+        
+        if (!isset($this->currentPlayer) || is_null($this->currentPlayer)){
+            $this->currentPlayer = 1;
+
+        
+        } else {
+            $this->currentPlayer = $this->input->post('currentPlayer');
+//                $this->currentPlayer = ($this->currentPlayer == 1) ? 2 : 1;
+                $this->field[$x][$y] = $this->currentPlayer;
+            
+            $this->step++;
+            
+        }
+        $opponent = $this->players_model->get_player_by_symbol($id, $this->currentPlayer);
+                           /**
          * Sets current players position
          */
-        $res = $this->position_model->set_position($id, $this->currentPlayer, $x, $y);         
+        $res = $this->position_model->set_position($id, $this->currentPlayer, $x, $y);  
+        
         
         /**
          * Finds next player
          */
         //$opponent = $this->players_model->get_opponent($id, $this->currentPlayer);
-        
-        
-//        $playerID = 1;                        
-        if ($this->currentPlayer) {            
-            $current = $this->currentPlayer;
-            $this->field[$x][$y] = $current;
-            $this->currentPlayer = ($current == 1) ? 2 : 1;
-//            $this->currentPlayer = $opponent['id'];
-            $this->step++;
-            $opponent = $this->players_model->get_player_by_symbol($id, $this->currentPlayer);
-        }
+ 
+//        $current = $this->currentPlayer;
+
+//        if ($this->currentPlayer) {            
+//            $current = $this->currentPlayer;
+//            $this->field[$x][$y] = $current;
+//            $this->currentPlayer = ($current == 1) ? 2 : 1;
+//           // $this->currentPlayer = ($current == 1) ? $this->input->post('currentPlayer') : $this->currentPlayer;
+////            $this->currentPlayer = $opponent['id'];
+//            $this->step++;
+//            $opponent = $this->players_model->get_player_by_symbol($id, $this->currentPlayer);
+//        }
                                        
 //        if ($res){
 //            $win = $this->checkWin($id, $playerID, $x, $y);
