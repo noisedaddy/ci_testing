@@ -1,5 +1,4 @@
 var player = 1;
-
 $(document).ready(function () {
 	var setWinnerCell = function(x,y){
 		$('[data-x=' + x + '][data-y=' + y + ']').addClass('winner');
@@ -13,17 +12,12 @@ $(document).ready(function () {
                     fieldParent = field.parent(),
                     x = fieldParent.data('x'),
                     y = fieldParent.data('y'),
-//                    currentPlayer = $('div.pl_setup > label').attr('id');
                     currentPlayer = $('p.js-step > span').attr('id');
                     test = currentPlayer.match(/\d+$/)[0];
                     formAction = $('form[name="frm_table"]').attr('action');
 //                    gameID = formAction.substring(formAction.lastIndexOf('/') + 1);
                 
-//                if (currentPlayer == initialPlayer) {
-//                    currentPlayer = $('p.js-step > span').attr('id')
-//                }                
-
-                alert("x: " + x + "y: "+y+" currentPlayer "+test);  
+                console.log("x: " + x + "y: "+y+" currentPlayer "+test);  
                                                 
 		$.ajax({
 			url: formAction,
@@ -38,7 +32,7 @@ $(document).ready(function () {
 				if (!data) {
 					return;
 				} else {
-                                    alert(JSON.stringify(data));
+                                    console.log(JSON.stringify(data));
                                 }
 
 				var step = $('.js-step'), endGameBlock = $('.js-end-game');
@@ -66,7 +60,7 @@ $(document).ready(function () {
 					endGameBlock.html('<p>Draw!</p>');
 				} else if (data['playerID']) {
 					step.html('<p class="js-step">Player <span class="icon player' + data['playerSymbol'] + '" id="pl_step_'+data['playerSymbol']+'">' + data['playerName'] + ' - </span></p>');
-					player = data['player'];
+					player = data['playerSymbol'];
 				}
 
 				field.remove();

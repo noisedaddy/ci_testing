@@ -117,13 +117,19 @@ class Game extends CI_Controller {
         if ($position) {
             
             /**
-             * Check if player won the game
+             * Check if player won the game AND RETURN WINNING SELLS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
              */
             $win = $this->position_model->checkWinModel($id, $current, $x, $y);
             
             if ($win['result']){
+                
                 $winner = $this->players_model->get_player_by_symbol($id, $current);
-                return array('winner' => $winner['player_nick'], 'playerSymbol' => $winner['player_symbol'], 'gameID' => $winner['fk_game_id']);
+                
+                return array(
+                    'winner' => $winner['player_nick'], 
+                    'playerSymbol' => $winner['player_symbol'], 
+                    'gameID' => $winner['fk_game_id']
+                );
             }
             
         } 
@@ -139,16 +145,14 @@ class Game extends CI_Controller {
          * Find opponent
          */
         $next = $this->players_model->get_player_by_symbol($id, $this->currentPlayer);
-        
- 
-                                          
-//        if ($res){
-//            $win = $this->checkWin($id, $playerID, $x, $y);
-//        } else {
-//            
-//        }
-        
-        $response = array('winner' => $this->getWinner(), 'winnerCells' => $this->getWinnerCells(), 'playerSymbol' => $this->getCurrentPlayer(), 'playerID' => $next['id'], 'playerName'=>$next['player_nick']);
+                                                        
+        $response = array(
+            'winner' => $this->getWinner(), 
+            'winnerCells' => $this->getWinnerCells(), 
+            'playerSymbol' => $this->getCurrentPlayer(), 
+            'playerID' => $next['id'], 
+            'playerName'=>$next['player_nick']
+        );
 
         header('Content-Type: application/json');
         echo json_encode( $response );
@@ -170,7 +174,10 @@ class Game extends CI_Controller {
         return $this->winnerCells;
     }
 
-    
+   public function getField() {
+        return $this->field;
+    }
+
     /**
      * USED FOR TESTING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
      */

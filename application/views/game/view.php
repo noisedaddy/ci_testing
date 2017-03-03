@@ -13,9 +13,9 @@
 				<?php for ($x = 1; $x < $width; $x++) :
 					$player = isset($field[$x][$y]) ? $field[$x][$y] : null;
 					$winner = isset($winnerCells[$x][$y]);
-					$class = ($player ? ' player' . $player : '') . ($winner ? ' winner' : '');
+					$class = ($player ? ' player' . $player : '') . ($winner ? ' winner' : '');                                        
 					?>
-					<div class="ticTacCell<?= $class ?>" data-x="<?=$x?>" data-y="<?=$y?>">
+					<div class="ticTacCell<?= $class ?>" data-x="<?=$x?>" data-y="<?=$y?>" data-z="<?=$player?>">
 						<?php if (!$player) : ?>
 							<a href="#" class="js-move"></a>
 						<?php endif ?>
