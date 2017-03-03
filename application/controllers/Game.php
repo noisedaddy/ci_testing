@@ -113,8 +113,9 @@ class Game extends CI_Controller {
          * Change players
          */
         $current = $currentPlayer;
+        $this->field[$x][$y] = $current;
         $this->currentPlayer = ($current == 1) ? 2 : 1;
-        
+        $this->step++;
         
         /**
          * Find opponent
@@ -125,8 +126,8 @@ class Game extends CI_Controller {
          * Sets current players position
          */
         $res = $this->position_model->set_position($id, $this->currentPlayer, $x, $y);  
-                
-                                       
+        
+                                  
 //        if ($res){
 //            $win = $this->checkWin($id, $playerID, $x, $y);
 //        } else {
