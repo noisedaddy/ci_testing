@@ -107,12 +107,16 @@ class Game extends CI_Controller {
         
         $x = $this->input->post('x');
         $y = $this->input->post('y');  
-        $currentPlayer = $this->input->post('currentPlayer');
+        $current = $this->input->post('currentPlayer');
+        
+        /**
+         * Sets current players position
+         */
+        $res = $this->position_model->set_position($id, $current, $x, $y); 
         
         /**
          * Change players
          */
-        $current = $currentPlayer;
         $this->field[$x][$y] = $current;
         $this->currentPlayer = ($current == 1) ? 2 : 1;
         $this->step++;
@@ -122,12 +126,8 @@ class Game extends CI_Controller {
          */
         $opponent = $this->players_model->get_player_by_symbol($id, $this->currentPlayer);
         
-        /**
-         * Sets current players position
-         */
-        $res = $this->position_model->set_position($id, $this->currentPlayer, $x, $y);  
-        
-                                  
+ 
+                                          
 //        if ($res){
 //            $win = $this->checkWin($id, $playerID, $x, $y);
 //        } else {
