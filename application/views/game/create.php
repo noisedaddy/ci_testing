@@ -7,12 +7,12 @@
 
     <label for="player_one">Player One</label>
     <div class="form-group">
-        <input type="input" name="player_one" class="form-control" />
+        <input type="input" name="player_one" class="form-control" value="<?php echo set_value('player_one')?>"/>
     </div>
 
     <label for="player_two">Player Two</label>
     <div class="form-group">
-        <input type="input" name="player_two" class="form-control" />
+        <input type="input" name="player_two" class="form-control" value="<?php echo set_value('player_two')?>"/>
     </div>
         
     <div class="form-group">
