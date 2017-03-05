@@ -71,8 +71,7 @@ contributors to the CodeIgniter project and you, the CodeIgniter user.
 
 
 1 .Set up default route to route from \ to game/create
-2. On player create form add POST variables to stay on page after submit AND validation rules for same fields in create form
-3. Look up to joins 
-4. set_players multiple insert 
-5. Find player ID in view and pass to controller !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-6. Make SQL for winner(COUNT AND ALL...)
+3. Look up to joins IN POSITION TABLE VIEW/INDEX 
+6. dynamicaly read positions and display table view/3
+8.Add bootstrap
+10. MERGE WIN QUERIES IN ONE USING CASE     public function check_win($gameID = null, $player = null, $x = null, $y = null){

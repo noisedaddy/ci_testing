@@ -66,16 +66,16 @@ class Players_model extends CI_Model {
      * @return type
      * @throws Exception
      */
-    public function set_players($gameID = null, $playerOne = null, $playerTwo = null)
+    public function set_players($gameID = null)
     {   
         $data1 = array(
-            'player_nick' => $playerOne,           
+            'player_nick' => $this->input->post('player_one'),           
             'fk_game_id' => $gameID,
             'player_symbol' => '1'
         );
         
         $data2 = array(
-            'player_nick' => $playerTwo,           
+            'player_nick' => $this->input->post('player_two'),           
             'fk_game_id' => $gameID,
             'player_symbol' => '2'
         ); 

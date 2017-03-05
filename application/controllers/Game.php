@@ -9,7 +9,6 @@ class Game extends CI_Controller {
     const COUNT_WIN = 3;
     private $field = [];
     private $winnerCells = [];
-    //private $currentPlayer;
     private $currentPlayer = 1;
     private $winner = null;
     private $step = 0;
@@ -27,7 +26,7 @@ class Game extends CI_Controller {
     public function index() {
         
             $data['games'] = $this->game_model->get_games();
-            $data['title'] = 'Games played';
+            $data['title'] = 'Listings:';
 
             $this->load->view('templates/header', $data);
             $this->load->view('game/index', $data);
@@ -35,20 +34,41 @@ class Game extends CI_Controller {
             
     }
 
+    /**
+     * Main game view
+     * @param type $id
+     */
     public function view($id = NULL)
-    {
+    {        
+//            $this->load->helper('form');
+//            $data['field'] = $this->position_model->get_game_position($id);
+//            
+//            //If no fields, position is empty
+//            if (!$data['field']){
+//                show_404();
+//            }
+//            
+//            $data['title'] = '';
+//            $data['id'] = ($id);
+//            $data['width'] = self::WIDTH;
+//            $data['height'] = self::HEIGHT;
+//            
+//            $data['winnerCells'] = $this->winnerCells;
+//            $data['currentPlayer'] = null;
+//            $data['playerNick'] = '';
+//            $data['playerID'] = '';          
+                          
             $this->load->helper('form');
             $data['game_item'] = $this->game_model->get_games($id);
             $data['players'] = $this->players_model->get_players($id);
             $data['pn'] = $this->players_model->get_player_by_symbol($id, $this->currentPlayer);
-            
+                       
             if (empty($data['game_item']))
             {
                     show_404();
             }
 
             $data['title'] = '<div class="pl_setup"><label id="title_'.$data['players'][0]['id'].'">'.$data['players'][0]['player_nick'].'</label>'." Vs ".'<label id="title_'.$data['players'][1]['id'].'">'.$data['players'][1]['player_nick'].'</label></div>';            
-            $data['status'] = $data['game_item']['status'];
             $data['id'] = ($id);
             $data['width'] = self::WIDTH;
             $data['height'] = self::HEIGHT;
@@ -81,14 +101,16 @@ class Game extends CI_Controller {
             $this->load->view('templates/footer');
 
         } else {
-            
+                        
             $this->load->helper('url');
             $res = $this->game_model->set_game();         
             
-            //Save players in players table 
+            /**
+             * Save players in players table 
+             */
             if (!is_null($res['id'])){
                 
-                if ($this->players_model->set_players($res['id'], $res['player_one_nick'], $res['player_two_nick'])){
+                    if ($this->players_model->set_players($res['id'])){
                     redirect(base_url().'game/view/'.$res['id']);
                 }
                                 
@@ -104,6 +126,7 @@ class Game extends CI_Controller {
     public function makeMove($id = NULL){
         
         $this->load->helper('url');
+        $response = false;
         
         $x = $this->input->post('x');
         $y = $this->input->post('y');  
@@ -113,54 +136,65 @@ class Game extends CI_Controller {
          * Sets current players position
          */
         $position = $this->position_model->set_position($id, $current, $x, $y); 
-        
+                
         if ($position) {
             
             /**
-             * Check if player won the game AND RETURN WINNING SELLS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+             * Get current player details: id, player_symbol, player_nick
              */
-            $win = $this->position_model->checkWinModel($id, $current, $x, $y);
+            $player = $this->players_model->get_player_by_symbol($id, $current);
             
+            /**
+             * Check if player won the game
+             */
+            $win = $this->position_model->check_win($id, array('id'=>$player['id'], 'player_symbol' => $current), $x, $y);
+            
+            
+            /**
+             * If player won the game
+             */
             if ($win['result']){
+                               
+                $this->winner = $player['player_nick'];
+                $this->winnerCells = $win['winningFields'];
+                $this->currentPlayer = $win['playerSymbol'];
                 
-                $winner = $this->players_model->get_player_by_symbol($id, $current);
+                $response = array(
+                    'winner' => $this->winner, 
+                    'winnerCells' => $this->winnerCells, 
+                    'playerSymbol' => $this->getCurrentPlayer(), 
+                    'playerID' => $this->getCurrentPlayer(),
+                    'playerName'=>$this->getWinner()
+                );        
+                                
+            } else {
                 
-                return array(
-                    'winner' => $winner['player_nick'], 
-                    'playerSymbol' => $winner['player_symbol'], 
-                    'gameID' => $winner['fk_game_id']
+              /**
+                * Change players
+                */     
+               $this->field[$x][$y] = $current;
+               $this->currentPlayer = ($current == 1) ? 2 : 1;
+               
+                /**
+                 * Find opponent
+                 */
+                $next = $this->players_model->get_player_by_symbol($id, $this->currentPlayer);
+                
+                $response = array(
+                    'winner' => $this->getWinner(), 
+                    'winnerCells' => $this->getWinnerCells(), 
+                    'playerSymbol' => $this->getCurrentPlayer(), 
+                    'playerID' => $next['id'], 
+                    'playerName'=>$next['player_nick']
                 );
+                        
             }
             
         } 
-        
-        /**
-         * Change players
-         */
-        $this->field[$x][$y] = $current;
-        $this->currentPlayer = ($current == 1) ? 2 : 1;
-        $this->step++;
-        
-        /**
-         * Find opponent
-         */
-        $next = $this->players_model->get_player_by_symbol($id, $this->currentPlayer);
-                                                        
-        $response = array(
-            'winner' => $this->getWinner(), 
-            'winnerCells' => $this->getWinnerCells(), 
-            'playerSymbol' => $this->getCurrentPlayer(), 
-            'playerID' => $next['id'], 
-            'playerName'=>$next['player_nick']
-        );
-
+                                                                
         header('Content-Type: application/json');
         echo json_encode( $response );
-    }
-        
-    public function checkWin($id = null, $playerID = null, $x = null, $y = null){
-        return $this->position_model->checkWinModel($id, $playerID, $x, $y);
-    }
+    }        
     
     public function getCurrentPlayer() {
         return $this->currentPlayer;
@@ -176,57 +210,6 @@ class Game extends CI_Controller {
 
    public function getField() {
         return $this->field;
-    }
-
-    /**
-     * USED FOR TESTING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-     */
-    public function checkWinner() {
-        
-        for ($y = 0; $y < $this->fieldHeight; $y++) {
-            for ($x = 0; $x < $this->fieldWidth; $x++) {
-                $this->checkLine($x, $y, 1, 0);
-                $this->checkLine($x, $y, 1, 1);
-                $this->checkLine($x, $y, 0, 1);
-                $this->checkLine($x, $y, -1, 1);
-            }
-        }
-
-        if ($this->getWinner()) {
-            $this->currentPlayer = null;
-        }
-        
-    }
-
-    public function checkLine($startX, $startY, $dx, $dy) {
-        $x = $startX;
-        $y = $startY;
-        $field = $this->field;
-        $value = isset($field[$x][$y]) ? $field[$x][$y] : null;
-        $cells = [];
-        $foundWinner = false;
-        if ($value) {
-            $cells[] = [$x, $y];
-            $foundWinner = true;
-            for ($i = 1; $i < $this->countToWin; $i++) {
-                $x += $dx;
-                $y += $dy;
-                $value2 = isset($field[$x][$y]) ? $field[$x][$y] : null;
-                if ($value2 == $value) {
-                    $cells[] = [$x, $y];
-                } else {
-                    $foundWinner = false;
-                    break;
-                }
-            }
-        }
-
-        if ($foundWinner) {
-            foreach ($cells as $cell) {
-                $this->winnerCells[$cell[0]][$cell[1]] = $value;
-            }
-            $this->winner = $value;
-        }
     }
 
 }

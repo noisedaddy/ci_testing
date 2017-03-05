@@ -1,6 +1,6 @@
 var player = 1;
 $(document).ready(function () {
-	var setWinnerCell = function(x,y){
+	var setWinnerFields = function(x,y){
 		$('[data-x=' + x + '][data-y=' + y + ']').addClass('winner');
 	};
 
@@ -20,7 +20,7 @@ $(document).ready(function () {
                 console.log("x: " + x + "y: "+y+" currentPlayer "+test);  
                                                 
 		$.ajax({
-			url: formAction,
+			url: formAction+'?XDEBUG_SESSION_START=netbeans-xdebug',
 			type: 'POST',
 			dataType: 'json',
 			data: {
@@ -35,36 +35,38 @@ $(document).ready(function () {
                                     console.log(JSON.stringify(data));
                                 }
 
-				var step = $('.js-step'), endGameBlock = $('.js-end-game');
+				var step = $('.js-step');
+                            
 				fieldParent.addClass('player' + player);
 
 				if (data['winner']) {
-					step.remove();
-					endGameBlock.html('<p>Win player <span class="icon player' + player + '">' + player + ' - </span>!</p>');
+					step.html('<p>Winner is player: <span class="icon player' + player + '">' + data['winner'] + ' - </span>!</p><p><a href="/game/create/">New game</a></p>');
 					var x = 0, y = 0;
 					if (Object.keys(data['winnerCells']).length == 1) {
 						x = Object.keys(data['winnerCells'])[0];
 						$.each(data['winnerCells'][x], function (index) {
 							y = index;
-							setWinnerCell(x, y)
+							setWinnerFields(x, y)
 						});
 					} else {
 						$.each(data['winnerCells'], function (index, value) {
 							x = index;
 							y = Object.keys(value)[0];
-							setWinnerCell(x, y)
+							setWinnerFields(x, y)
 						});
 					}
 				} else if (!data['winner'] && !data['playerID']) {
-					step.remove();
-					endGameBlock.html('<p>Draw!</p>');
+					step.html('<p>Draw!</p>');
 				} else if (data['playerID']) {
 					step.html('<p class="js-step">Player <span class="icon player' + data['playerSymbol'] + '" id="pl_step_'+data['playerSymbol']+'">' + data['playerName'] + ' - </span></p>');
 					player = data['playerSymbol'];
 				}
 
 				field.remove();
-			}
+			},
+                        error:function (xhr, status){
+                                        alert(JSON.stringify(xhr));                                      
+                         }   
 		});
 	});
 });
