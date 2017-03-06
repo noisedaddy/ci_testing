@@ -3,7 +3,7 @@
      <ul class="list-group">           
             <?php if (empty($games)) : ?>
                 <p>List is empty!</p>
-                <?php echo anchor(base_url().'/game/create', 'Create New Game'); ?>
+                <?php echo anchor(base_url().'game/create', 'Create New Game'); ?>
             <?php endif ?>    
     <?php foreach ($games as $game): ?>
            <li class="list-group-item">
