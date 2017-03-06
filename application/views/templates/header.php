@@ -28,4 +28,4 @@
                         </div><!--/.nav-collapse -->
                     </div><!--/.container-fluid -->
                 </nav>
-                <div class="jumbotron"> 
+                <div class="container col-lg-12 col-md-12 col-sm-12 col-xs-12"> 
