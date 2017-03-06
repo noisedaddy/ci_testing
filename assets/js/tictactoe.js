@@ -13,7 +13,7 @@ $(document).ready(function () {
                     current = currentPlayer.match(/\d+$/)[0];
                     formAction = $('form[name="frm_table"]').attr('action');
 //                    gameID = formAction.substring(formAction.lastIndexOf('/') + 1);
-                
+
                 console.log("x: " + x + "y: "+y+" currentPlayer "+current);  
                                                 
 		$.ajax({

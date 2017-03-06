@@ -25,6 +25,7 @@ body {
 	border: 1px solid #ccc;
 	text-align: center;
         height: 15%;
+        padding-top: 14px;
 }
 
 .ticTacCell a {
@@ -41,7 +42,7 @@ body {
 }
 
 .ticTacCell.winner {
-	background: #ffc
+	background: #ffc;
 }
 
 .icon {
