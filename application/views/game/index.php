@@ -1,5 +1,5 @@
-<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-    <h2><?php echo $title; ?></h2>
+<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 <?php echo $listings_class; ?>">
+    <h2><?php echo $title_main; ?></h2>
      <ul class="list-group">
     <?php foreach ($games as $game): ?>
            <li class="list-group-item">

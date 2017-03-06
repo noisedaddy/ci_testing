@@ -29,16 +29,36 @@ class Players_model extends CI_Model {
      * @param type $playerSymbol
      * @return type
      */
-    public function get_player_by_symbol($id = NULL, $playerSymbol = NULL){
+//    public function get_player_by_symbol($id = NULL, $playerSymbol = NULL){
+//        
+//        if ($id === NULL || $playerSymbol === NULL){
+//            return;            
+//        }
+//                
+//        $query = $this->db->get_where('players', array('fk_game_id' => $id, 'player_symbol' => $playerSymbol));
+//        return $query->row_array();      
+//        
+//    }
+    
+    /**
+     * Gets player by player_symbol or id
+     * @param type $id
+     * @param type array
+     * @return type
+     */
+    public function get_player($id = NULL, $fields = array()){
         
-        if ($id === NULL || $playerSymbol === NULL){
+        if ($id === NULL){
             return;            
         }
         
-        $query = $this->db->get_where('players', array('fk_game_id' => $id, 'player_symbol' => $playerSymbol));
+        $params = (isset($fields['player_symbol'])) ? array('fk_game_id' => $id, 'player_symbol' => $fields['player_symbol']) : array('fk_game_id' => $id, 'id' => $fields['id']);
+        
+        $query = $this->db->get_where('players', $params);
         return $query->row_array();      
         
     }
+    
     /**
      * Find players opponent
      * @param type $id

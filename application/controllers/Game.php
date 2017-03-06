@@ -4,14 +4,18 @@
 class Game extends CI_Controller {
 
     private static $startTitle = 'Start new game';
+    private static $titleMain = 'Listings:';
+    private static $listingsClass = "hidden-xs hidden-sm";
     const WIDTH = 4;
     const HEIGHT = 4;
     const COUNT_WIN = 3;
+    const NUMBER_FIELD = 9;
+    const FINISHED = 'finished';
+    const DRAW = 'draw';
     private $field = [];
     private $winnerCells = [];
     private $currentPlayer = 1;
     private $winner = null;
-    private $step = 0;
 
     public function __construct() {
         
@@ -23,11 +27,15 @@ class Game extends CI_Controller {
         
     }
 
+    /**
+     * Main game page with listings
+     */
     public function index() {
         
             $data['games'] = $this->game_model->get_games();
-            $data['title'] = 'Listings:';
-
+            $data['title_main'] = self::$titleMain;
+            $data['listings_class'] = "";
+            
             $this->load->view('templates/header', $data);
             $this->load->view('game/index', $data);
             $this->load->view('templates/footer');
@@ -39,51 +47,98 @@ class Game extends CI_Controller {
      * @param type $id
      */
     public function view($id = NULL)
-    {        
+    {    
+        
+        if ($id === null){
+            show_404();
+        }
+
+            $this->load->helper('form');
+            $data['details'] = $this->game_model->get_games($id);         
+            $data['cells'] = $this->position_model->get_game_position($id);
+            
+            /**
+             * Used for listings partial view
+             */
+            $data['games'] = $this->game_model->get_games();
+            $data['title_main'] = Game::$titleMain;
+            $data['listings_class'] = self::$listingsClass;
+                    
+            $this->field = $data['cells']['position'];
+            
+            $data['title'] = '';
+            $data['currentPlayer'] = null;
+            $data['playerNick'] = '';
+            $data['playerID'] = ''; 
+            
+            
+            //Finished, list details
+            if ($data['details']['status'] == Game::FINISHED && $data['details']['fk_winner_id'] !== null){
+                
+                $data['player'] = $this->players_model->get_player($id, array('id'=>$data['details']['fk_winner_id']));
+                $data['winnerCells'] = $data['cells']['winner_cells'];
+                
+                $data['title'] = '<ul class="list-group">
+                                            <li class="list-group-item">Status: '.$data['details']['status'].'</li>
+                                            <li class="list-group-item">Start: '.$data['details']['start_on'].'</li>
+                                            <li class="list-group-item">Players: '.$data['details']['player_one_nick'].' Vs '.$data['details']['player_two_nick'].'</li>
+                                            <li class="list-group-item">Winner: '.$data['player']['player_nick'].'</li>
+                                 </ul>';
+                             
+            } else {
+                
+                //IF PENDING, CHECK CURRENTPLAYER - PUT IN SESSION
+                
+                $data['pn'] = $this->players_model->get_player($id, array('player_symbol'=>$this->getCurrentPlayer()));
+                $data['players'] = $this->players_model->get_players($id);                
+                $data['currentPlayer'] = $this->getCurrentPlayer();            
+                $data['playerNick'] = $data['pn']['player_nick'];
+                $data['playerID'] = $data['pn']['id'];     
+                $data['title'] = '<div class="pl_setup"><label id="title_'.$data['players'][0]['id'].'">'.$data['players'][0]['player_nick'].'</label>'." Vs ".'<label id="title_'.$data['players'][1]['id'].'">'.$data['players'][1]['player_nick'].'</label></div>';            
+            
+            }
+            
+            $data['field'] = $this->getField();            
+            $data['id'] = ($id);
+            $data['width'] = self::WIDTH;
+            $data['height'] = self::HEIGHT;            
+                                                                      
+            /**
+             * ODL WORKING
+             */
 //            $this->load->helper('form');
-//            $data['field'] = $this->position_model->get_game_position($id);
-//            
-//            //If no fields, position is empty
-//            if (!$data['field']){
-//                show_404();
+//            $data['game_item'] = $this->game_model->get_games($id);
+//            $data['players'] = $this->players_model->get_players($id);
+//            $data['pn'] = $this->players_model->get_player_by_symbol($id, $this->currentPlayer);
+//                       
+//            if (empty($data['game_item']))
+//            {
+//                    show_404();
 //            }
-//            
-//            $data['title'] = '';
+//
+//            $data['title'] = '<div class="pl_setup"><label id="title_'.$data['players'][0]['id'].'">'.$data['players'][0]['player_nick'].'</label>'." Vs ".'<label id="title_'.$data['players'][1]['id'].'">'.$data['players'][1]['player_nick'].'</label></div>';            
 //            $data['id'] = ($id);
 //            $data['width'] = self::WIDTH;
 //            $data['height'] = self::HEIGHT;
-//            
+//            $data['field'] = $this->field;
 //            $data['winnerCells'] = $this->winnerCells;
-//            $data['currentPlayer'] = null;
-//            $data['playerNick'] = '';
-//            $data['playerID'] = '';          
-                          
-            $this->load->helper('form');
-            $data['game_item'] = $this->game_model->get_games($id);
-            $data['players'] = $this->players_model->get_players($id);
-            $data['pn'] = $this->players_model->get_player_by_symbol($id, $this->currentPlayer);
-                       
-            if (empty($data['game_item']))
-            {
-                    show_404();
-            }
-
-            $data['title'] = '<div class="pl_setup"><label id="title_'.$data['players'][0]['id'].'">'.$data['players'][0]['player_nick'].'</label>'." Vs ".'<label id="title_'.$data['players'][1]['id'].'">'.$data['players'][1]['player_nick'].'</label></div>';            
-            $data['id'] = ($id);
-            $data['width'] = self::WIDTH;
-            $data['height'] = self::HEIGHT;
-            $data['field'] = $this->field;
-            $data['winnerCells'] = $this->winnerCells;
-            $data['currentPlayer'] = $this->currentPlayer;
-            //$data['winner'] = $this->winner;
-            $data['playerNick'] = $data['pn']['player_nick'];
-            $data['playerID'] = $data['pn']['id'];
-            
+//            $data['currentPlayer'] = $this->currentPlayer;
+//            //$data['winner'] = $this->winner;
+//            $data['playerNick'] = $data['pn']['player_nick'];
+//            $data['playerID'] = $data['pn']['id'];
+            /**
+             * END
+             */
+                                    
             $this->load->view('templates/header');
             $this->load->view('game/view', $data);
+            $this->load->view('game/index', $data);
             $this->load->view('templates/footer');
     }
     
+    /**
+     * Create game page
+     */
     public function create()
     {
         $this->load->helper('form');
@@ -142,7 +197,7 @@ class Game extends CI_Controller {
             /**
              * Get current player details: id, player_symbol, player_nick
              */
-            $player = $this->players_model->get_player_by_symbol($id, $current);
+            $player = $this->players_model->get_player($id, array('player_symbol' => $current));
             
             /**
              * Check if player won the game
@@ -154,14 +209,19 @@ class Game extends CI_Controller {
              * If player won the game
              */
             if ($win['result']){
-                               
-                $this->winner = $player['player_nick'];
+                
+              
+                /**
+                 * If game is draw, set winner as null
+                 */
+                $this->winner = (is_null($win['playerSymbol']) && is_null($win['winningFields'])) ? null : $player['player_nick'];
+                
                 $this->winnerCells = $win['winningFields'];
                 $this->currentPlayer = $win['playerSymbol'];
-                
+                 
                 $response = array(
                     'winner' => $this->winner, 
-                    'winnerCells' => $this->winnerCells, 
+                    'winnerCells' => $this->getWinnerCells(), 
                     'playerSymbol' => $this->getCurrentPlayer(), 
                     'playerID' => $this->getCurrentPlayer(),
                     'playerName'=>$this->getWinner()
@@ -178,7 +238,7 @@ class Game extends CI_Controller {
                 /**
                  * Find opponent
                  */
-                $next = $this->players_model->get_player_by_symbol($id, $this->currentPlayer);
+               $next = $this->players_model->get_player($id, array('player_symbol' => $this->getCurrentPlayer()));
                 
                 $response = array(
                     'winner' => $this->getWinner(), 

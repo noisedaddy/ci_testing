@@ -6,23 +6,27 @@ class Position_model extends CI_Model {
         $this->load->database();
     }
 
-    public function get_game_position($id = null){
+    public function get_game_position($gameID = null){
         
-        if ($id === null) {
+        if ($gameID === null) {
             return;        
         }
         
-        $columns = null;
-        $query = $this->db->get_where('position', array('fk_game_id' => $id));        
+        $columns = array();
+        $winCells = array();
+        
+        $query = $this->db->get_where('position', array('fk_game_id' => $gameID));        
         $mytablescolumns = $query->result_array();
         
         if ($mytablescolumns){
+            //if (!empty($mytablescolumns)){
             
             for($i = 0; $i < count($mytablescolumns); $i++) {            
                $columns[$mytablescolumns[$i]['pos_x']][$mytablescolumns[$i]['pos_y']] = $mytablescolumns[$i]['fk_player_id'];
+               if ($mytablescolumns[$i]['win_field'] == 1) $winCells[$mytablescolumns[$i]['pos_x']][$mytablescolumns[$i]['pos_y']] = $mytablescolumns[$i]['win_field'];
             }   
             
-            return $columns;            
+            return array('position' => $columns, 'winner_cells' => $winCells);            
         }
          
         return false;
@@ -79,7 +83,7 @@ class Position_model extends CI_Model {
     }
     
     /**
-     * Check if current player won the game
+     * Check if current player won the game or it is a draw
      * @param type $gameID
      * @param type $player
      * @param type $x
@@ -118,16 +122,22 @@ class Position_model extends CI_Model {
         
         $query_3 = $this->db->query($sql_case_3)->row_array(); 
         
-        if ($query_1['count_x'] >= 3 || $query_1['count_y'] >= 3){            
+        
+        $query_draw = $this->db->get_where('position', array('fk_game_id' => $gameID));        
+        $count_draw = $query_draw->num_rows();
+        
+        if ($query_1['count_x'] >= Game::COUNT_WIN || $query_1['count_y'] >= Game::COUNT_WIN){            
             
-            $field = ($query_1['count_x'] == 3) ? 'x' : 'y';
-            $winningArray = $this->get_position($gameID, $player['player_symbol'], $field, $$field);  
-            
+            /**
+             * Get winning cells array and set winner fields
+             */
+            $field = ($query_1['count_x'] == Game::COUNT_WIN) ? 'x' : 'y';
+            $winningArray = $this->get_position($gameID, $player['player_symbol'], $field, $$field);              
             $this->set_winner($gameID, array('id' => $player['id'], 'player_symbol' => $player['player_symbol']), $winningArray);
             
             return array('result' => true, 'playerSymbol' => $player['player_symbol'], 'gameID' => $gameID, 'winningFields' => $winningArray);
             
-        } else if ($query_2['total_left'] >= 3){
+        } else if ($query_2['total_left'] >= Game::COUNT_WIN){
             
             $winningArray = array(
                 
@@ -141,7 +151,7 @@ class Position_model extends CI_Model {
             
             return array('result' => true, 'playerSymbol' => $player['player_symbol'], 'gameID' => $gameID, 'winningFields' => $winningArray);
             
-        } else if($query_3['total_right'] >= 3){
+        } else if($query_3['total_right'] >= Game::COUNT_WIN){
             
             $winningArray = array(
                 
@@ -154,21 +164,19 @@ class Position_model extends CI_Model {
             $this->set_winner($gameID, array('id' => $player['id'], 'player_symbol' => $player['player_symbol']), $winningArray);            
             return array('result' => true, 'playerSymbol' => $player['player_symbol'], 'gameID' => $gameID, 'winningFields' => $winningArray);
             
-        }       
-        else {
+        } else if ($count_draw == Game::NUMBER_FIELD){
+            
+            $this->_updateRowWhere('game', array('id' => $gameID), array('status' => Game::DRAW, 'fk_winner_id' => null));
+            return array('result' => true, 'playerSymbol' => null, 'gameID' => $gameID, 'winningFields' => null);
+            
+        } else {
             return array('result' => false);
         }
         
     }
-    
-    public function check_win_diagonally($gameID = null, $player = null){
-        
-        
-        
-    }
-    
+       
     /**
-     * Sets winner fileds in game and position table
+     * Sets winner fields in game and position table
      * @param type $gameID
      * @param type $player = array(id=>playerid, player_symbol=>player_symbol)
      * @param type $winningArray
@@ -177,7 +185,7 @@ class Position_model extends CI_Model {
     public function set_winner($gameID = null, $player = array(), $winningArray = array()){
         
     
-        $this->_updateRowWhere('game', array('id' => $gameID), array('status' => 'finished', 'fk_winner_id' => $player['id']));
+        $this->_updateRowWhere('game', array('id' => $gameID), array('status' => Game::FINISHED, 'fk_winner_id' => $player['id']));
         
             for($i=1;$i<=3; $i++){
 

@@ -72,6 +72,7 @@ contributors to the CodeIgniter project and you, the CodeIgniter user.
 
 1 .Set up default route to route from \ to game/create
 3. Look up to joins IN POSITION TABLE VIEW/INDEX 
-6. dynamicaly read positions and display table view/3
-8.Add bootstrap
 10. MERGE WIN QUERIES IN ONE USING CASE     public function check_win($gameID = null, $player = null, $x = null, $y = null){
+3. For page reload in the middle of the game, currentPlayer can change if its player O because default player is X 
+4. add X-O in center of the cell
+After game, add it in the listings

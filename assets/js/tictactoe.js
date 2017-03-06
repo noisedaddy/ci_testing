@@ -1,9 +1,6 @@
 var player = 1;
 $(document).ready(function () {
-	var setWinnerFields = function(x,y){
-		$('[data-x=' + x + '][data-y=' + y + ']').addClass('winner');
-	};
-
+    
 	$('.js-move').on('click', function (e) {
 		e.preventDefault();
 		e.stopPropagation();
@@ -13,20 +10,21 @@ $(document).ready(function () {
                     x = fieldParent.data('x'),
                     y = fieldParent.data('y'),
                     currentPlayer = $('p.js-step > span').attr('id');
-                    test = currentPlayer.match(/\d+$/)[0];
+                    current = currentPlayer.match(/\d+$/)[0];
                     formAction = $('form[name="frm_table"]').attr('action');
 //                    gameID = formAction.substring(formAction.lastIndexOf('/') + 1);
                 
-                console.log("x: " + x + "y: "+y+" currentPlayer "+test);  
+                console.log("x: " + x + "y: "+y+" currentPlayer "+current);  
                                                 
 		$.ajax({
-			url: formAction+'?XDEBUG_SESSION_START=netbeans-xdebug',
+			//url: formAction+'?XDEBUG_SESSION_START=netbeans-xdebug',
+                        url: formAction,
 			type: 'POST',
 			dataType: 'json',
 			data: {
 				x: x,
 				y: y,
-                                currentPlayer: test
+                                currentPlayer: current
 			},
 			success: function (data) {
 				if (!data) {
@@ -69,4 +67,9 @@ $(document).ready(function () {
                          }   
 		});
 	});
+        
+        var setWinnerFields = function(x,y){
+		$('[data-x=' + x + '][data-y=' + y + ']').addClass('winner');
+	};
+        
 });

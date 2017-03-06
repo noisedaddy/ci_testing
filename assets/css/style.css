@@ -22,16 +22,14 @@ body {
 }
 
 .ticTacCell {
-	float: left;
 	border: 1px solid #ccc;
-	width: 20px;
-	height: 20px;
-	position: relative;
 	text-align: center;
+        height: 15%;
 }
 
 .ticTacCell a {
 	position: absolute;
+        text-align: center;
 	left: 0;
 	top: 0;
 	right: 0;
@@ -43,7 +41,7 @@ body {
 }
 
 .ticTacCell.winner {
-	background: #f00;
+	background: #ffc
 }
 
 .icon {
@@ -53,11 +51,13 @@ body {
 .player1:after {
 	content: 'X';
 	font-weight: bold;
-	color: green;
+        font-size: 25px;
+	color: blue;
 }
 
 .player2:after {
 	content: 'O';
 	font-weight: bold;
-	color: blue;
+        font-size: 25px;
+	color: green;
 }
