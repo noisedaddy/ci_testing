@@ -17,9 +17,6 @@ class Game_model extends CI_Model {
     public function get_games($id = NULL) {
 
         if ($id === NULL) {
-
-//            $query = $this->db->get_where('game');
-//            return $query->result_array();
         
         $sql = "
               SELECT G.id as game_id,
@@ -33,7 +30,7 @@ class Game_model extends CI_Model {
                 FROM game AS G
                         INNER JOIN players AS P
                     ON G.fk_winner_id = P.id 
-                        ORDER BY G.start_on";               
+                        ORDER BY G.start_on LIMIT 5";               
         
             return $this->db->query($sql)->result_array();
         

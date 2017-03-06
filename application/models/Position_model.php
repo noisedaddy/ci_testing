@@ -19,7 +19,6 @@ class Position_model extends CI_Model {
         $mytablescolumns = $query->result_array();
         
         if ($mytablescolumns){
-            //if (!empty($mytablescolumns)){
             
             for($i = 0; $i < count($mytablescolumns); $i++) {            
                $columns[$mytablescolumns[$i]['pos_x']][$mytablescolumns[$i]['pos_y']] = $mytablescolumns[$i]['fk_player_id'];

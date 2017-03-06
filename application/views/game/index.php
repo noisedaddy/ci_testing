@@ -1,7 +1,7 @@
 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 <?php echo $listings_class; ?>">
     <h2><?php echo $title_main; ?></h2>
-     <ul class="list-group">           
-            <?php if (empty($games)) : ?>
+     <ul id="ul_listing" class="list-group">           
+            <?php if ($empty_flag) : ?>
                 <p>List is empty!</p>
                 <?php echo anchor(base_url().'game/create', 'Create New Game'); ?>
             <?php endif ?>    

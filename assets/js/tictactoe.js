@@ -12,12 +12,9 @@ $(document).ready(function () {
                     currentPlayer = $('p.js-step > span').attr('id');
                     current = currentPlayer.match(/\d+$/)[0];
                     formAction = $('form[name="frm_table"]').attr('action');
-//                    gameID = formAction.substring(formAction.lastIndexOf('/') + 1);
-
-                console.log("x: " + x + "y: "+y+" currentPlayer "+current);  
-                                                
+                    gameID = formAction.substring(formAction.lastIndexOf('/') + 1);
+                                               
 		$.ajax({
-			//url: formAction+'?XDEBUG_SESSION_START=netbeans-xdebug',
                         url: formAction,
 			type: 'POST',
 			dataType: 'json',
@@ -29,12 +26,10 @@ $(document).ready(function () {
 			success: function (data) {
 				if (!data) {
 					return;
-				} else {
-                                    console.log(JSON.stringify(data));
-                                }
+				}
 
 				var step = $('.js-step');
-                            
+                                                                                                                               
 				fieldParent.addClass('player' + player);
 
 				if (data['winner']) {
@@ -53,6 +48,14 @@ $(document).ready(function () {
 							setWinnerFields(x, y)
 						});
 					}
+                                        
+                                    if ($('ul#ul_listing li').length > 0){
+                                        $('ul#ul_listing li:last').after('<li class="list-group-item"><span>'+$('#ul_details li:first').text()+', Status: finished</span><br><a href="/game/view/'+gameID+'">'+$('#ul_details li:last').text()+'</a></li>');
+                                    } else {
+                                        $('ul#ul_listing').append('<li class="list-group-item"><span>'+$('#ul_details li:first').text()+', Status: finished</span><br><a href="/game/view/'+gameID+'">'+$('#ul_details li:last').text()+'</a></li>');
+                                    }  
+                                    
+                                                                                
 				} else if (!data['winner'] && !data['playerID']) {
 					step.html('<p>Draw!</p>');
 				} else if (data['playerID']) {
@@ -70,6 +73,6 @@ $(document).ready(function () {
         
         var setWinnerFields = function(x,y){
 		$('[data-x=' + x + '][data-y=' + y + ']').addClass('winner');
-	};
+	};       
         
 });

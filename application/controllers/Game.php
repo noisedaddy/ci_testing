@@ -3,9 +3,9 @@
 
 class Game extends CI_Controller {
 
-    private static $startTitle = 'Start new game';
-    private static $titleMain = 'Listings:';
-    private static $listingsClass = "hidden-xs hidden-sm";
+    private static $startTitle = 'Start new game!';
+    private static $titleMain = 'Results';
+    private static $listingsClass = "hidden-xs";
     const WIDTH = 4;
     const HEIGHT = 4;
     const COUNT_WIN = 3;
@@ -32,7 +32,13 @@ class Game extends CI_Controller {
      */
     public function index() {
         
+            $data['empty_flag'] = false;
             $data['games'] = $this->game_model->get_games();
+            
+            if (empty($data['games'])){
+                $data['empty_flag'] = true;
+            }
+            
             $data['title_main'] = self::$titleMain;
             $data['listings_class'] = "";
             
@@ -60,6 +66,7 @@ class Game extends CI_Controller {
             /**
              * Used for listings partial view
              */
+            $data['empty_flag'] = false;
             $data['games'] = $this->game_model->get_games();
             $data['title_main'] = Game::$titleMain;
             $data['listings_class'] = self::$listingsClass;
@@ -79,23 +86,24 @@ class Game extends CI_Controller {
                 $data['winnerCells'] = $data['cells']['winner_cells'];
                 
                 $data['title'] = '<ul class="list-group">
-                                            <li class="list-group-item">Status: '.$data['details']['status'].'</li>
                                             <li class="list-group-item">Start: '.$data['details']['start_on'].'</li>
+                                            <li class="list-group-item">Status: '.$data['details']['status'].'</li>
                                             <li class="list-group-item">Players: '.$data['details']['player_one_nick'].' Vs '.$data['details']['player_two_nick'].'</li>
                                             <li class="list-group-item">Winner: '.$data['player']['player_nick'].'</li>
                                  </ul>';
                              
             } else {
                 
-                //IF PENDING, CHECK CURRENTPLAYER - PUT IN SESSION
                 
                 $data['pn'] = $this->players_model->get_player($id, array('player_symbol'=>$this->getCurrentPlayer()));
                 $data['players'] = $this->players_model->get_players($id);                
                 $data['currentPlayer'] = $this->getCurrentPlayer();            
                 $data['playerNick'] = $data['pn']['player_nick'];
                 $data['playerID'] = $data['pn']['id'];     
-                $data['title'] = '<div class="pl_setup"><label id="title_'.$data['players'][0]['id'].'">'.$data['players'][0]['player_nick'].'</label>'." Vs ".'<label id="title_'.$data['players'][1]['id'].'">'.$data['players'][1]['player_nick'].'</label></div>';            
-            
+                $data['title'] = '<ul id="ul_details" class="list-group">
+                                            <li class="list-group-item">Started: '.$data['details']['start_on'].'</li>
+                                            <li class="list-group-item">'.$data['players'][0]['player_nick'].' Vs '.$data['players'][1]['player_nick'].'</li>                                            
+                                 </ul>';
             }
             
             $data['field'] = $this->getField();            
@@ -103,32 +111,6 @@ class Game extends CI_Controller {
             $data['width'] = self::WIDTH;
             $data['height'] = self::HEIGHT;            
                                                                       
-            /**
-             * ODL WORKING
-             */
-//            $this->load->helper('form');
-//            $data['game_item'] = $this->game_model->get_games($id);
-//            $data['players'] = $this->players_model->get_players($id);
-//            $data['pn'] = $this->players_model->get_player_by_symbol($id, $this->currentPlayer);
-//                       
-//            if (empty($data['game_item']))
-//            {
-//                    show_404();
-//            }
-//
-//            $data['title'] = '<div class="pl_setup"><label id="title_'.$data['players'][0]['id'].'">'.$data['players'][0]['player_nick'].'</label>'." Vs ".'<label id="title_'.$data['players'][1]['id'].'">'.$data['players'][1]['player_nick'].'</label></div>';            
-//            $data['id'] = ($id);
-//            $data['width'] = self::WIDTH;
-//            $data['height'] = self::HEIGHT;
-//            $data['field'] = $this->field;
-//            $data['winnerCells'] = $this->winnerCells;
-//            $data['currentPlayer'] = $this->currentPlayer;
-//            //$data['winner'] = $this->winner;
-//            $data['playerNick'] = $data['pn']['player_nick'];
-//            $data['playerID'] = $data['pn']['id'];
-            /**
-             * END
-             */
                                     
             $this->load->view('templates/header');
             $this->load->view('game/view', $data);
