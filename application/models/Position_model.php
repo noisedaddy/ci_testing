@@ -90,41 +90,11 @@ class Position_model extends CI_Model {
      * @return type
      */
     public function check_win($gameID = null, $player = array(), $x = null, $y = null){
-        
-        $sql_case_1 = "
-            SELECT
-            SUM(IF(pos_x = '".$x."', 1, 0)) AS count_x,
-            SUM(IF(pos_y = '".$y."', 1, 0)) AS count_y
-            FROM position where fk_player_id = ".$player['player_symbol']." and fk_game_id = ".$gameID."
-         ";
-        $query_1 = $this->db->query($sql_case_1)->row_array();
-        
-        $sql_case_2 = "
-                    SELECT COUNT(fk_game_id) as total_left FROM position 
-                    where (
-                        (pos_x = 1 and pos_y = 3) 
-                        or (pos_x =2 and pos_y = 2) 
-                        or (pos_x = 3 and pos_y = 1) 
-                    ) and fk_player_id = ".$player['player_symbol']." and fk_game_id = ".$gameID."
-         ";
-        
-        $query_2 = $this->db->query($sql_case_2)->row_array();       
-        
-        $sql_case_3 = "
-                    SELECT COUNT(fk_game_id) as total_right FROM position 
-                    where (
-                            (pos_x = 1 and pos_y = 1) 
-                            or (pos_x =2 and pos_y = 2) 
-                            or (pos_x = 3 and pos_y = 3) 
-                    ) and fk_player_id = ".$player['player_symbol']." and fk_game_id = ".$gameID."
-         ";
-        
-        $query_3 = $this->db->query($sql_case_3)->row_array(); 
-        
-        
-        $query_draw = $this->db->get_where('position', array('fk_game_id' => $gameID));        
-        $count_draw = $query_draw->num_rows();
-        
+                
+        $query_1 = $this->check_line_win($gameID, $player, $x, $y);
+        $query_2 = $this->check_line_diagonaly($gameID, $player);
+        $query_3 = $this->check_draw($gameID);
+                
         if ($query_1['count_x'] >= Game::COUNT_WIN || $query_1['count_y'] >= Game::COUNT_WIN){            
             
             /**
@@ -150,7 +120,7 @@ class Position_model extends CI_Model {
             
             return array('result' => true, 'playerSymbol' => $player['player_symbol'], 'gameID' => $gameID, 'winningFields' => $winningArray);
             
-        } else if($query_3['total_right'] >= Game::COUNT_WIN){
+        } else if($query_2['total_right'] >= Game::COUNT_WIN){
             
             $winningArray = array(
                 
@@ -163,7 +133,7 @@ class Position_model extends CI_Model {
             $this->set_winner($gameID, array('id' => $player['id'], 'player_symbol' => $player['player_symbol']), $winningArray);            
             return array('result' => true, 'playerSymbol' => $player['player_symbol'], 'gameID' => $gameID, 'winningFields' => $winningArray);
             
-        } else if ($count_draw == Game::NUMBER_FIELD){
+        } else if ($query_3 == Game::NUMBER_FIELD){
             
             $this->_updateRowWhere('game', array('id' => $gameID), array('status' => Game::DRAW, 'fk_winner_id' => null));
             return array('result' => true, 'playerSymbol' => null, 'gameID' => $gameID, 'winningFields' => null);
@@ -173,7 +143,74 @@ class Position_model extends CI_Model {
         }
         
     }
-       
+        
+    /**
+     * Checks vertical/horizontal win
+     * @param type $gameID
+     * @param type $player
+     * @param type $x
+     * @param type $y
+     * @return type
+     */
+    public function check_line_win($gameID = null, $player = array(), $x = null, $y = null){
+                        
+        $sql = "
+            SELECT
+            SUM(IF(pos_x = '".$x."', 1, 0)) AS count_x,
+            SUM(IF(pos_y = '".$y."', 1, 0)) AS count_y
+            FROM position where fk_player_id = ".$player['player_symbol']." and fk_game_id = ".$gameID."
+         ";
+        
+        return $this->db->query($sql)->row_array();
+                        
+    }
+    
+    /**
+     * Check diagonally win
+     * @param type $gameID
+     * @param type $player
+     * @return type
+     */
+    public function check_line_diagonaly($gameID = null, $player = array()){
+        
+        $sql_case_2 = "
+                    SELECT COUNT(fk_game_id) as total_left FROM position 
+                    where (
+                        (pos_x = 1 and pos_y = 3) 
+                        or (pos_x =2 and pos_y = 2) 
+                        or (pos_x = 3 and pos_y = 1) 
+                    ) and fk_player_id = ".$player['player_symbol']." and fk_game_id = ".$gameID."
+         ";
+        
+        $query_2 = $this->db->query($sql_case_2)->row_array();       
+        
+        $sql_case_3 = "
+                    SELECT COUNT(fk_game_id) as total_right FROM position 
+                    where (
+                            (pos_x = 1 and pos_y = 1) 
+                            or (pos_x =2 and pos_y = 2) 
+                            or (pos_x = 3 and pos_y = 3) 
+                    ) and fk_player_id = ".$player['player_symbol']." and fk_game_id = ".$gameID."
+         ";
+        
+        $query_3 = $this->db->query($sql_case_3)->row_array(); 
+        
+        return array('total_left' => $query_2['total_left'], 'total_right' => $query_3['total_right']);
+        
+    }
+    
+    /**
+     * Check draw
+     * @param type $gameID
+     * @return type
+     */
+    public function check_draw($gameID = null){
+        
+        $query_draw = $this->db->get_where('position', array('fk_game_id' => $gameID));        
+        return $query_draw->num_rows();
+        
+    }
+    
     /**
      * Sets winner fields in game and position table
      * @param type $gameID
