@@ -100,7 +100,7 @@ class Position_model extends CI_Model {
         $query_1 = $this->db->query($sql_case_1)->row_array();
         
         $sql_case_2 = "
-                    SELECT COUNT(fk_game_id) as total_left FROM ci_testing.position 
+                    SELECT COUNT(fk_game_id) as total_left FROM position 
                     where (
                         (pos_x = 1 and pos_y = 3) 
                         or (pos_x =2 and pos_y = 2) 
@@ -111,7 +111,7 @@ class Position_model extends CI_Model {
         $query_2 = $this->db->query($sql_case_2)->row_array();       
         
         $sql_case_3 = "
-                    SELECT COUNT(fk_game_id) as total_right FROM ci_testing.position 
+                    SELECT COUNT(fk_game_id) as total_right FROM position 
                     where (
                             (pos_x = 1 and pos_y = 1) 
                             or (pos_x =2 and pos_y = 2) 

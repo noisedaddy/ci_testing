@@ -5,7 +5,7 @@ class Game extends CI_Controller {
 
     private static $startTitle = 'Start new game!';
     private static $titleMain = 'Results';
-    private static $listingsClass = "hidden-xs";
+    private static $listingsClass = "hidden-sm hidden-xs";
     const WIDTH = 4;
     const HEIGHT = 4;
     const COUNT_WIN = 3;
