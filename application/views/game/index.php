@@ -9,7 +9,8 @@
            <li class="list-group-item">
                     <span><?php echo "Started: ".$game['game_start'].", Status: ".$game['game_status']; ?></span>
                     <br>
-                    <?php echo anchor(base_url().'game/view/'.$game['game_id'], $game['player_one_nick']." Vs ".$game['player_two_nick']); ?>
+                    <?php $winner = ( $game['player_one_nick'] ==  $game['player_winner']) ? "<b>".$game['player_one_nick']."</b> Vs ".$game['player_two_nick'] : $game['player_one_nick']." Vs <b>".$game['player_two_nick']."</b>";?>
+                    <?php echo anchor(base_url().'game/view/'.$game['game_id'], $winner); ?>
             </li>
     <?php endforeach; ?>
      </ul>

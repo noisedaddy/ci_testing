@@ -30,7 +30,7 @@ class Game_model extends CI_Model {
                 FROM game AS G
                         INNER JOIN players AS P
                     ON G.fk_winner_id = P.id 
-                        ORDER BY G.start_on LIMIT 5";               
+                        ORDER BY G.start_on DESC LIMIT 5";               
         
             return $this->db->query($sql)->result_array();
         

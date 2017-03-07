@@ -13,7 +13,8 @@ $(document).ready(function () {
                     current = currentPlayer.match(/\d+$/)[0];
                     formAction = $('form[name="frm_table"]').attr('action');
                     gameID = formAction.substring(formAction.lastIndexOf('/') + 1);
-                                               
+                    
+            
 		$.ajax({
                         url: formAction,
 			type: 'POST',
@@ -27,7 +28,7 @@ $(document).ready(function () {
 				if (!data) {
 					return;
 				}
-
+                                                                
 				var step = $('.js-step');
                                                                                                                                
 				fieldParent.addClass('player' + player);
@@ -48,11 +49,16 @@ $(document).ready(function () {
 							setWinnerFields(x, y)
 						});
 					}
-                                        
+                                    
+                                
+                                    var sPlayerFields = $('#ul_details li:last').text();
+                                    var res = sPlayerFields.replace(data['winner'], "<b>"+data['winner']+"</b>");
+                                    var playerFields = '<li class="list-group-item"><span>'+$('#ul_details li:first').text()+', Status: finished</span><br><a href="/game/view/'+gameID+'">'+res+'</a></li>';    
+                                    
                                     if ($('ul#ul_listing li').length > 0){
-                                        $('ul#ul_listing li:last').after('<li class="list-group-item"><span>'+$('#ul_details li:first').text()+', Status: finished</span><br><a href="/game/view/'+gameID+'">'+$('#ul_details li:last').text()+'</a></li>');
+                                        $('ul#ul_listing li:first').before(playerFields);
                                     } else {
-                                        $('ul#ul_listing').append('<li class="list-group-item"><span>'+$('#ul_details li:first').text()+', Status: finished</span><br><a href="/game/view/'+gameID+'">'+$('#ul_details li:last').text()+'</a></li>');
+                                        $('ul#ul_listing').append(playerFields);
                                     }  
                                     
                                                                                 

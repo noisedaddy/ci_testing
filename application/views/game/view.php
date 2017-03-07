@@ -14,7 +14,7 @@
                                             $winner = isset($winnerCells[$x][$y]);
                                             $class = ($player ? ' player' . $player : '') . ($winner ? ' winner' : '');                                        
                                             ?>
-                                            <div class="col-sm-4 col-xs-4 ticTacCell<?= $class ?>" data-x="<?=$x?>" data-y="<?=$y?>">
+                                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 ticTacCell<?= $class ?>" data-x="<?=$x?>" data-y="<?=$y?>">
                                                     <?php if (!$player) : ?>
                                                             <a href="#" class="js-move"></a>
                                                     <?php endif ?>
