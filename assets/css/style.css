@@ -61,7 +61,9 @@ body {
 }
 
 
-
+.lgi_custom {
+    border: none;
+}
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen
 and (min-device-width : 320px)
@@ -142,7 +144,7 @@ and (max-device-width : 1024px)
 and (orientation : portrait) {
 /* STYLES GO HERE */
     .ticTacCell {
-        height: 15%;
+        height: 10%;
         padding-top: 40px;
     }
 }
@@ -188,7 +190,7 @@ and (orientation : landscape) {
 /* STYLES GO HERE */
     .ticTacCell {
         height: 25%;
-
+        padding-top: 15px;
     }
 }
  

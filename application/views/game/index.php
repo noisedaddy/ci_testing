@@ -17,7 +17,7 @@
                         <?php echo anchor(base_url() . 'game/create', 'Create New Game'); ?>
                     <?php endif ?>    
                     <?php foreach ($games as $game): ?>
-                        <li class="list-group-item">
+                        <li class="list-group-item lgi_custom">
                             <span><?php echo "Started: " . $game['game_start']; ?></span>
                             <br>
                             <?php $winner = ( $game['player_one_nick'] == $game['player_winner']) ? "<b>" . $game['player_one_nick'] . "</b> Vs " . $game['player_two_nick'] : $game['player_one_nick'] . " Vs <b>" . $game['player_two_nick'] . "</b>"; ?>
@@ -33,7 +33,7 @@
                         <?php echo anchor(base_url() . 'game/create', 'Create New Game'); ?>
                     <?php endif ?>    
                     <?php foreach ($games_draw as $game_draw): ?>
-                        <li class="list-group-item">
+                        <li class="list-group-item lgi_custom">
                             <span><?php echo "Started: " . $game_draw['start_on']; ?></span>
                             <br>                            
                             <?php echo anchor(base_url() . 'game/view/' . $game_draw['id'], $game_draw['player_one_nick']." Vs ".$game_draw['player_two_nick']); ?>
