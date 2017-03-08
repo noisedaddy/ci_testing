@@ -68,7 +68,18 @@ body {
         top: 30%;
         bottom: 30%;
 }
-
+.playerStep2:after {
+    	content: 'O';
+	font-weight: bold;
+        font-size: 25px;
+	color: green;
+}
+.playerStep1:after {
+    	content: 'X';
+	font-weight: bold;
+        font-size: 25px;
+	color: blue;
+}
 
 .lgi_custom {
     border: none;

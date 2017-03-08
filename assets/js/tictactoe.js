@@ -30,11 +30,11 @@ $(document).ready(function () {
 				}
                                                                 
 				var step = $('.js-step');
-                                                                                                                               
+                                                                        
 				fieldParent.addClass('player' + player);
 
 				if (data['winner']) {
-					step.html('<p>Winner is player: <span class="icon player' + player + '">' + data['winner'] + ' - </span>!</p><p><a href="/game/create/">New game</a></p>');
+					step.html('<p>Winner is player: <span class="icon playerStep' + player + '">' + data['winner'] + ' - </span>!</p><p><a href="/game/create/">New game</a></p>');
 					var x = 0, y = 0;
 					if (Object.keys(data['winnerCells']).length == 1) {
 						x = Object.keys(data['winnerCells'])[0];
@@ -76,7 +76,7 @@ $(document).ready(function () {
                                         
                                         
 				} else if (data['playerID']) {
-					step.html('<p class="js-step">Player <span class="icon player' + data['playerSymbol'] + '" id="pl_step_'+data['playerSymbol']+'">' + data['playerName'] + ' - </span></p>');
+					step.html('<p class="js-step">Player <span class="icon playerStep' + data['playerSymbol'] + '" id="pl_step_'+data['playerSymbol']+'">' + data['playerName'] + ' - </span></p>');
 					player = data['playerSymbol'];
 				}
 
