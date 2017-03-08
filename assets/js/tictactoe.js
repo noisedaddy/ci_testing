@@ -53,7 +53,7 @@ $(document).ready(function () {
                                 
                                     var sPlayerFields = $('#ul_details li:last').text();
                                     var res = sPlayerFields.replace(data['winner'], "<b>"+data['winner']+"</b>");
-                                    var playerFields = '<li class="list-group-item"><span>'+$('#ul_details li:first').text()+'</span><br><a href="/game/view/'+gameID+'">'+res+'</a></li>';    
+                                    var playerFields = '<li class="list-group-item lgi_custom"><span>'+$('#ul_details li:first').text()+'</span><br><a href="/game/view/'+gameID+'">'+res+'</a></li>';    
                                     
                                     if ($('ul#ul_listing li').length > 0){
                                         $('ul#ul_listing li:first').before(playerFields);
@@ -66,7 +66,7 @@ $(document).ready(function () {
                                     
 					step.html('<p>Draw!</p>');
                                         var sPlayerFields = $('#ul_details li:last').text();                                        
-                                        var playerFields = '<li class="list-group-item"><span>'+$('#ul_details li:first').text()+'</span><br><a href="/game/view/'+gameID+'">'+sPlayerFields+'</a></li>';    
+                                        var playerFields = '<li class="list-group-item lgi_custom"><span>'+$('#ul_details li:first').text()+'</span><br><a href="/game/view/'+gameID+'">'+sPlayerFields+'</a></li>';    
 
                                         if ($('ul#ul_listing_draw li').length > 0){
                                             $('ul#ul_listing_draw li:first').before(playerFields);
