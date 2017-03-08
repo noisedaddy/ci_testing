@@ -34,8 +34,9 @@ class Game extends CI_Controller {
         
             $data['empty_flag'] = false;
             $data['games'] = $this->game_model->get_games();
+            $data['games_draw'] = $this->game_model->get_games_draw();
             
-            if (empty($data['games'])){
+            if (empty($data['games']) && empty($data['games_draw'])){
                 $data['empty_flag'] = true;
             }
             
@@ -68,6 +69,8 @@ class Game extends CI_Controller {
              */
             $data['empty_flag'] = false;
             $data['games'] = $this->game_model->get_games();
+            $data['games_draw'] = $this->game_model->get_games_draw();
+            
             $data['title_main'] = Game::$titleMain;
             $data['listings_class'] = self::$listingsClass;
                     
@@ -80,16 +83,19 @@ class Game extends CI_Controller {
             
             
             //Finished, list details
-            if ($data['details']['status'] == Game::FINISHED && $data['details']['fk_winner_id'] !== null){
+//            if ($data['details']['status'] == Game::FINISHED && $data['details']['fk_winner_id'] !== null){
+            if ($data['details']['status'] == Game::FINISHED || $data['details']['status'] == Game::DRAW){
                 
                 $data['player'] = $this->players_model->get_player($id, array('id'=>$data['details']['fk_winner_id']));
                 $data['winnerCells'] = $data['cells']['winner_cells'];
+                
+                $winner = ($data['details']['status'] == Game::FINISHED) ? $data['player']['player_nick'] : self::DRAW;
                 
                 $data['title'] = '<ul class="list-group">
                                             <li class="list-group-item">Start: '.$data['details']['start_on'].'</li>
                                             <li class="list-group-item">Status: '.$data['details']['status'].'</li>
                                             <li class="list-group-item">Players: '.$data['details']['player_one_nick'].' Vs '.$data['details']['player_two_nick'].'</li>
-                                            <li class="list-group-item">Winner: '.$data['player']['player_nick'].'</li>
+                                            <li class="list-group-item">Winner: '.$winner.'</li>
                                  </ul>';
                              
             } else {
@@ -155,7 +161,7 @@ class Game extends CI_Controller {
             
         }
     }
-    
+        
     /**
      * Ajax call from field click
      * @param type $id

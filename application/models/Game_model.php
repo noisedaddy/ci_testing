@@ -55,6 +55,17 @@ class Game_model extends CI_Model {
     }
     
     /**
+     * Get draws
+     * @return type
+     */
+    public function get_games_draw(){
+     
+        $query = $this->db->order_by('start_on', 'DESC')->get_where('game', array('status' => Game::DRAW));
+        return $query->result_array();
+        
+    }
+    
+    /**
      * Creates players and set up new game
      * @return type
      */
