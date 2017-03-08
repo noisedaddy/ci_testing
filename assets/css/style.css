@@ -22,7 +22,6 @@ body {
 	border: 1px solid #ccc;
 	text-align: center;
         height: 15%;
-        padding-top: 40px;
 }
 
 .ticTacCell a {
@@ -51,6 +50,11 @@ body {
 	font-weight: bold;
         font-size: 25px;
 	color: blue;
+        position: absolute;
+        left: 30%;
+        right: 30%;
+        top: 30%;
+        bottom: 30%;
 }
 
 .player2:after {
@@ -58,6 +62,11 @@ body {
 	font-weight: bold;
         font-size: 25px;
 	color: green;
+        position: absolute;
+        left: 30%;
+        right: 30%;
+        top: 30%;
+        bottom: 30%;
 }
 
 
@@ -72,7 +81,7 @@ and (max-device-width : 480px) {
 
     .ticTacCell {
         height: 15%;
-        padding-top: 10px; 
+/*        padding-top: 10px; */
     }
 
 }
@@ -132,7 +141,7 @@ and (orientation : landscape) {
 /* STYLES GO HERE */
     .ticTacCell {
         height: 15%;
-            padding-top: 30px;
+/*            padding-top: 30px;*/
 
     }
 }
@@ -145,7 +154,7 @@ and (orientation : portrait) {
 /* STYLES GO HERE */
     .ticTacCell {
         height: 10%;
-        padding-top: 40px;
+/*        padding-top: 40px;*/
     }
 }
  
@@ -165,7 +174,7 @@ and (min-width : 1824px) {
 /* STYLES GO HERE */
     .ticTacCell {
         height: 15%;
-        padding-top: 40px;
+/*        padding-top: 40px;*/
 
     }
 }
@@ -190,7 +199,7 @@ and (orientation : landscape) {
 /* STYLES GO HERE */
     .ticTacCell {
         height: 25%;
-        padding-top: 15px;
+/*        padding-top: 15px;*/
     }
 }
  
