@@ -173,30 +173,17 @@ class Position_model extends CI_Model {
      */
     public function check_line_diagonaly($gameID = null, $player = array()){
         
-        $sql_case_2 = "
-                    SELECT COUNT(fk_game_id) as total_left FROM position 
-                    where (
-                        (pos_x = 1 and pos_y = 3) 
-                        or (pos_x =2 and pos_y = 2) 
-                        or (pos_x = 3 and pos_y = 1) 
-                    ) and fk_player_id = ".$player['player_symbol']." and fk_game_id = ".$gameID."
-         ";
+         
+        $sql = "SELECT COUNT(IF(((pos_x = 1 and pos_y = 1) 
+					or (pos_x =2 and pos_y = 2) 
+					or (pos_x = 3 and pos_y = 3)),1,NULL))  total_right,  
+                                COUNT(IF((pos_x = 1 and pos_y = 3) 
+                                                 or (pos_x =2 and pos_y = 2) 
+                                                 or (pos_x = 3 and pos_y = 1),1,NULL))  total_left
+                                FROM position WHERE fk_player_id = ".$player['player_symbol']." and fk_game_id = ".$gameID."";
         
-        $query_2 = $this->db->query($sql_case_2)->row_array();       
-        
-        $sql_case_3 = "
-                    SELECT COUNT(fk_game_id) as total_right FROM position 
-                    where (
-                            (pos_x = 1 and pos_y = 1) 
-                            or (pos_x =2 and pos_y = 2) 
-                            or (pos_x = 3 and pos_y = 3) 
-                    ) and fk_player_id = ".$player['player_symbol']." and fk_game_id = ".$gameID."
-         ";
-        
-        $query_3 = $this->db->query($sql_case_3)->row_array(); 
-        
-        return array('total_left' => $query_2['total_left'], 'total_right' => $query_3['total_right']);
-        
+        $query = $this->db->query($sql)->row_array();
+        return array('total_left' => $query['total_left'], 'total_right' => $query['total_right']);               
     }
     
     /**
