@@ -34,7 +34,7 @@ $(document).ready(function () {
 				fieldParent.addClass('player' + player);
 
 				if (data['winner']) {
-					step.html('<p>Winner is player: <span class="icon playerStep' + player + '">' + data['winner'] + ' - </span>!</p><p><a href="/game/create/">New game</a></p>');
+					step.html('<p>Winner is player: <span class="icon playerStep' + player + '">' + data['winner'] + ' - </span>!</p><p><a href="'+base_url+'/game/create/">New game</a></p>');
 					var x = 0, y = 0;
 					if (Object.keys(data['winnerCells']).length == 1) {
 						x = Object.keys(data['winnerCells'])[0];
@@ -53,7 +53,7 @@ $(document).ready(function () {
                                 
                                     var sPlayerFields = $('#ul_details li:last').text();
                                     var res = sPlayerFields.replace(data['winner'], "<b>"+data['winner']+"</b>");
-                                    var playerFields = '<li class="list-group-item lgi_custom"><span>'+$('#ul_details li:first').text()+'</span><br><a href="/game/view/'+gameID+'">'+res+'</a></li>';    
+                                    var playerFields = '<li class="list-group-item lgi_custom"><span>'+$('#ul_details li:first').text()+'</span><br><a href="'+base_url+'/game/view/'+gameID+'">'+res+'</a></li>';    
                                     
                                     if ($('ul#ul_listing li').length > 0){
                                         $('ul#ul_listing li:first').before(playerFields);
@@ -66,7 +66,7 @@ $(document).ready(function () {
                                     
 					step.html('<p>Draw!</p>');
                                         var sPlayerFields = $('#ul_details li:last').text();                                        
-                                        var playerFields = '<li class="list-group-item lgi_custom"><span>'+$('#ul_details li:first').text()+'</span><br><a href="/game/view/'+gameID+'">'+sPlayerFields+'</a></li>';    
+                                        var playerFields = '<li class="list-group-item lgi_custom"><span>'+$('#ul_details li:first').text()+'</span><br><a href="'+base_url+'/game/view/'+gameID+'">'+sPlayerFields+'</a></li>';    
 
                                         if ($('ul#ul_listing_draw li').length > 0){
                                             $('ul#ul_listing_draw li:first').before(playerFields);
