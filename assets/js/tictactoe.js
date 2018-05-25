@@ -28,7 +28,7 @@ $(document).ready(function () {
 				if (!data) {
 					return;
 				}
-                                                                
+                                
 				var step = $('.js-step');
                                                                         
 				fieldParent.addClass('player' + player);
